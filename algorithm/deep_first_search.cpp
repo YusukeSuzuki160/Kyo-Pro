@@ -1,46 +1,50 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+using Graph = std::vector<std::vector<int>>;
 class DeepFirstSearch //ノード１から深さ優先探索
 {
 private:
-    int n;                           //ノードの数
-    std::vector<std::vector<int>> a; //隣接行列
-    std::vector<int> visit;
+    int n;   //ノードの数
+    Graph g; //隣接リスト
+    std::vector<bool> seen;
 
 public:
-    DeepFirstSearch(int n, std::vector<std::vector<int>> a)
+    DeepFirstSearch(int n, const Graph &g)
     {
         this->n = n;
-        this->a = a;
-        this->visit.resize(this->n + 1);
-        for (int i = 0; i < n + 1; i++)
-        {
-            this->visit[i] = 0;
-        }
+        this->g = g;
+        seen.assign(n, false);
     }
-    void search_root(int i);
+    void deep_first_search(int v);
 };
 
-void DeepFirstSearch::search_root(int i)
+void DeepFirstSearch::deep_first_search(int v)
 {
-    visit[i] = 1;
-    for (int j = 1; j <= n; j++)
+    seen[v] = true;
+    for (auto next_v : g[v])
     {
-        if (a[i][j] == 1 && visit[j] == 0)
+        if (seen[next_v])
         {
-            std::cout << i << "->" << j << " ";
-            search_root(j);
+            continue;
         }
+        deep_first_search(next_v);
     }
 }
 
 int main()
 {
-    std::vector<std::vector<int>> a = {{0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 1, 0, 0, 0, 0, 0, 0}, {0, 1, 0, 1, 1, 0, 0, 0, 0}, {0, 0, 1, 0, 0, 0, 0, 1, 0}, {0, 0, 1, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 1, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 1, 0, 1, 1}, {0, 0, 0, 1, 0, 0, 1, 0, 1}, {0, 0, 0, 0, 0, 0, 1, 1, 0}};
-    int n = 8;
-    DeepFirstSearch df(n, a);
-    df.search_root(1);
-    std::cout << std::endl;
+    int n, m;
+    std::cin >> n, m;
+
+    Graph g(n);
+    for (int i = 0; i < m; i++)
+    {
+        int a, b;
+        std::cin >> a >> b;
+        g[a].push_back(b);
+        g[b].push_back(a);
+    }
+    DeepFirstSearch dfs(n, g);
+    dfs.deep_first_search(0);
 }
