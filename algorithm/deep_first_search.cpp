@@ -28,6 +28,7 @@ void DeepFirstSearch::deep_first_search(int v)
         {
             continue;
         }
+        std::cout << v << "->" << next_v << " ";
         deep_first_search(next_v);
     }
 }
@@ -35,7 +36,7 @@ void DeepFirstSearch::deep_first_search(int v)
 int main()
 {
     int n, m;
-    std::cin >> n, m;
+    std::cin >> n >> m;
 
     Graph g(n);
     for (int i = 0; i < m; i++)
@@ -47,4 +48,5 @@ int main()
     }
     DeepFirstSearch dfs(n, g);
     dfs.deep_first_search(0);
+    std::cout << std::endl;
 }
